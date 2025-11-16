@@ -52,7 +52,9 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:uinavigation"))
     implementation(project(":core:uicomponents"))
+
     implementation(project(":feature:workinprogress"))
+    implementation(project(":feature:forecast"))
 
     // Core
     implementation(libs.androidx.core.ktx)

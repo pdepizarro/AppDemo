@@ -1,5 +1,8 @@
 package com.pph.data.di
 
+import com.pph.data.BuildConfig
+import com.pph.data.repository.remote.api.ForecastApi
+import com.pph.data.repository.remote.api.createForecastApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,13 +13,15 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
     @Provides
-    fun provideBaseUrl(): String = "https://api.demoapp.com/"
+    fun provideBaseUrl(): String = "https://api.openweathermap.org/"
 
     @Provides
     fun provideHttpClient(): HttpClient {
@@ -38,4 +43,12 @@ object DataModule {
         return Ktorfit.Builder().baseUrl(baseUrl).httpClient(client).build()
     }
 
+    @Provides
+    @Singleton
+    fun provideForecastApi(ktorfit: Ktorfit): ForecastApi =
+        ktorfit.createForecastApi()
+
+    @Provides
+    @Named("openWeatherApiKey")
+    fun provideOpenWeatherApiKey(): String = BuildConfig.OPEN_WEATHER_API_KEY
 }

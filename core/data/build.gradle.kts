@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -23,15 +24,33 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
+    }
+
+    defaultConfig {
+        val apiKey: String = gradleLocalProperties(
+            projectRootDir = rootDir,
+            providers = project.providers
+        ).getProperty("OPEN_WEATHER_API_KEY") ?: ""
+
+        buildConfigField(
+            "String",
+            "OPEN_WEATHER_API_KEY",
+            "\"$apiKey\""
+        )
     }
 }
 
@@ -58,6 +77,7 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.serialization.kotlinx.json)
+    ksp(libs.ktorfit.ksp)
 
     // Testing
     testImplementation(libs.junit)

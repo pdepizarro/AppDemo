@@ -2,10 +2,14 @@ package com.pph.data.repository.remote
 
 import kotlin.coroutines.cancellation.CancellationException
 
-inline fun <T> safeCall(block: () -> T): Result<T> {
-    return runCatching {
-        block()
-    }.onFailure { e ->
-        if(e is CancellationException) throw e
+suspend inline fun <T> safeCall(
+    crossinline block: suspend () -> T
+): Result<T> {
+    return try {
+        Result.success(block())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Throwable) {
+        Result.failure(e)
     }
 }

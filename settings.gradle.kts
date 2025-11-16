@@ -11,6 +11,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -29,3 +30,4 @@ include(":core:uinavigation")
 
 include(":feature:shared")
 include(":feature:workinprogress")
+include(":feature:forecast")

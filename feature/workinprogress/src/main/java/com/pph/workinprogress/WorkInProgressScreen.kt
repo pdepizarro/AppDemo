@@ -1,4 +1,4 @@
-package com.example.workinprogress
+package com.pph.workinprogress
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.pph.uicomponents.theme.DemoAppTheme
 
 @Composable
-fun WorkInProgressScreen2() {
+fun WorkInProgressScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +32,7 @@ fun WorkInProgressScreen2() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Work in progress 2",
+                text = "Work in progress",
                 style = DemoAppTheme.typography.bodyLarge,
             )
             Spacer(modifier = Modifier.width(8.dp))
