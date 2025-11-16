@@ -5,10 +5,12 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.pph.feature.shared"
+    namespace = "com.pph.feature.details"
     compileSdk = 36
 
     buildTypes {
@@ -20,16 +22,10 @@ android {
             )
         }
     }
-
-    defaultConfig {
-        minSdk = 26
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-
 
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
@@ -39,9 +35,10 @@ android {
 }
 
 dependencies {
-
     // Modules
-    implementation(project(":core:domain"))
+    implementation(project(":core:uicomponents"))
+    implementation(project(":core:uinavigation"))
+
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -57,7 +54,13 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extension)
 
+    // Hilt
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+    implementation(libs.javapoet)
 
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

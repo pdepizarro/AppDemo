@@ -33,6 +33,7 @@ class ForecastViewModel @Inject constructor(
 
     fun loadForecastData() {
         viewModelScope.launch {
+            /*
             _state.value = _state.value.copy(
                 isLoading = true,
                 errorMessage = null
@@ -53,31 +54,34 @@ class ForecastViewModel @Inject constructor(
                     )
                 },
                 onFailure = { throwable ->
-                    val fakeList = generateFakeForecast(LocalDate.now())
-
                     _state.value.copy(
                         isLoading = false,
-                        forecast = fakeList,
-                        errorMessage = throwable.message ?: "Error al cargar el pronóstico"
+                        forecast = emptyList(),
+                        errorMessage = throwable.message ?: "No se pudo cargar el pronóstico"
                     )
                 }
             )
-        }
-    }
 
-    private fun generateFakeForecast(today: LocalDate): List<DailyForecastUiModel> =
-        (0 until 7).map { index ->
-            DailyForecastUiModel(
-                date = today.plusDays(index.toLong()),
-                minTemp = 10 + index,
-                maxTemp = 18 + index,
-                humidity = 60 + index,
-                windSpeed = 10 + index,
-                condition = when (index % 3) {
-                    0 -> "Soleado"
-                    1 -> "Nublado"
-                    else -> "Lluvia"
-                }
+             */
+
+            val today = LocalDate.now()
+
+            val fakeList = (0 until 7).map { index ->
+                DailyForecastUiModel(
+                    date = today.plusDays(index.toLong()),
+                    minTemp = 0,
+                    maxTemp = 0,
+                    humidity = 0,
+                    windSpeed = 0,
+                    condition = ""
+                )
+            }
+
+            _state.value = _state.value.copy(
+                isLoading = false,
+                forecast = fakeList,
+                errorMessage = null
             )
         }
+    }
 }
