@@ -37,4 +37,3 @@ inline fun <reified T : ScreenComposable> NavHostController.navigateWith(
         }
     })
 }
-

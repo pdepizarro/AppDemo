@@ -4,9 +4,13 @@ import java.time.LocalDate
 
 data class DailyForecastUiModel(
     val date: LocalDate,
-    val minTemp: Int,
-    val maxTemp: Int,
+    val minTemp: Double,
+    val maxTemp: Double,
+    val dayTemp: Double,
+    val nightTemp: Double,
     val humidity: Int,
-    val windSpeed: Int,
-    val condition: String
+    val windSpeed: Double,
+    val main: String,
+    val description: String,
+    val icon: String
 )

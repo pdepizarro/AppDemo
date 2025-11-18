@@ -1,4 +1,4 @@
-package com.pph.data.dto
+package com.pph.data.model.dto
 
 import kotlinx.serialization.Serializable
 

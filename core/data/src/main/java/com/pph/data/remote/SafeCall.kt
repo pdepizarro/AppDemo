@@ -1,4 +1,4 @@
-package com.pph.data.repository.remote
+package com.pph.data.remote
 
 import kotlin.coroutines.cancellation.CancellationException
 

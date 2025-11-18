@@ -1,54 +1,81 @@
 package com.pph.data.mapper
 
-import com.pph.data.dto.CurrentWeatherDto
-import com.pph.data.dto.DailyForecastDto
-import com.pph.data.dto.ForecastResponseDto
-import com.pph.data.dto.TempDto
-import com.pph.data.dto.WeatherDescriptionDto
-import com.pph.domain.model.CurrentWeatherBo
+import com.pph.data.model.dto.DailyForecastDto
+import com.pph.data.model.dto.ForecastResponseDto
+import com.pph.data.model.entity.DailyForecastEntity
 import com.pph.domain.model.DailyForecastBo
-import com.pph.domain.model.ForecastResponseBo
 import com.pph.domain.model.TempBo
 import com.pph.domain.model.WeatherDescriptionBo
-import kotlin.collections.map
+import java.time.Instant
+import java.time.ZoneOffset
 
-fun ForecastResponseDto.toBo(): ForecastResponseBo = ForecastResponseBo(
-    lat = this.lat,
-    lon = this.lon,
-    timezone = this.timezone,
-    timezoneOffset = this.timezoneOffset,
-    current = this.current?.toBo(),
-    daily = this.daily.map { it.toBo() }
-)
+// ---------------------------------------------------------------------------
+//  DTO -> ENTITY
+// ---------------------------------------------------------------------------
 
-fun CurrentWeatherDto.toBo(): CurrentWeatherBo = CurrentWeatherBo(
-    dt = this.dt,
-    temp = this.temp,
-    humidity = this.humidity,
-    windSpeed = this.windSpeed,
-    weather = this.weather.map { it.toBo() }
-)
+fun DailyForecastDto.toEntity(
+    timezoneOffset: Int,
+    now: Long
+): DailyForecastEntity =
+    DailyForecastEntity(
+        dateEpochDay = dt.toEpochDayWithOffset(timezoneOffset),
+        dt = dt,
+        humidity = humidity,
+        windSpeed = windSpeed,
 
-fun DailyForecastDto.toBo(): DailyForecastBo = DailyForecastBo(
-    dt = this.dt,
-    temp = this.temp.toBo(),
-    humidity = this.humidity,
-    windSpeed = this.windSpeed,
-    weather = this.weather.map { it.toBo() }
-)
+        dayTemp = temp.day,
+        minTemp = temp.min,
+        maxTemp = temp.max,
+        nightTemp = temp.night,
 
-fun TempDto.toBo(): TempBo = TempBo(
-    day = this.day,
-    min = this.min,
-    max = this.max,
-    night = this.night
-)
+        weatherId = weather.firstOrNull()?.id ?: -1,
+        weatherMain = weather.firstOrNull()?.main.orEmpty(),
+        weatherDescription = weather.firstOrNull()?.description.orEmpty(),
+        weatherIcon = weather.firstOrNull()?.icon.orEmpty(),
 
-fun WeatherDescriptionDto.toBo(): WeatherDescriptionBo = WeatherDescriptionBo(
-    id = this.id,
-    main = this.main,
-    description = this.description,
-    icon = this.icon
-)
+        timezoneOffset = timezoneOffset,
+        lastUpdated = now
+    )
 
+fun ForecastResponseDto.toDailyForecastEntities(
+    now: Long
+): List<DailyForecastEntity> =
+    daily.map { it.toEntity(timezoneOffset, now) }
+
+private fun Long.toEpochDayWithOffset(offsetSeconds: Int): Long {
+    val offset = ZoneOffset.ofTotalSeconds(offsetSeconds)
+    return Instant.ofEpochSecond(this)
+        .atOffset(offset)
+        .toLocalDate()
+        .toEpochDay()
+}
+
+// ---------------------------------------------------------------------------
+//  ENTITY -> BO
+// ---------------------------------------------------------------------------
+
+fun DailyForecastEntity.toBo(): DailyForecastBo =
+    DailyForecastBo(
+        dateEpochDay = dateEpochDay,
+        dt = dt,
+        humidity = humidity,
+        windSpeed = windSpeed,
+        temp = TempBo(
+            day = dayTemp,
+            min = minTemp,
+            max = maxTemp,
+            night = nightTemp
+        ),
+        weather = listOf(
+            WeatherDescriptionBo(
+                id = weatherId,
+                main = weatherMain,
+                description = weatherDescription,
+                icon = weatherIcon
+            )
+        )
+    )
+
+fun List<DailyForecastEntity>.toBoList(): List<DailyForecastBo> =
+    map { it.toBo() }
 

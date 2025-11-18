@@ -17,7 +17,9 @@
         <activity
             android:name="com.pph.demoapp.ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.DemoApp">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.DemoApp"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

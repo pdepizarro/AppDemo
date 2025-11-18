@@ -55,6 +55,7 @@ dependencies {
 
     implementation(project(":feature:workinprogress"))
     implementation(project(":feature:forecast"))
+    implementation(project(":feature:details"))
 
     // Core
     implementation(libs.androidx.core.ktx)

@@ -2,126 +2,155 @@ package com.pph.forecast.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.pph.forecast.ForecastViewModel
 import com.pph.shared.ui.model.DailyForecastUiModel
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
 fun ForecastScrollableContent(
+    vm: ForecastViewModel,
     forecast: List<DailyForecastUiModel>,
-    squareSize: Dp,
-    onDayClick: (DailyForecastUiModel) -> Unit
+    squareSize: Dp
 ) {
+
     val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
 
-    val listState = rememberLazyListState()
+    val state by vm.state.collectAsState()
     val scope = rememberCoroutineScope()
-    val isProgrammaticScroll = remember { mutableStateOf(false) }
 
-    // Índice del ítem más cercano al centro del viewport
-    val centerItemIndex by remember(listState) {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val visible = layoutInfo.visibleItemsInfo
-            if (visible.isEmpty()) return@derivedStateOf null
+    val isSnapping = remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
+    var centerItemIndex by remember { mutableStateOf<Int?>(null) }
 
-            val viewportCenter =
-                (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
-
-            visible.minByOrNull { item ->
-                val itemCenter = item.offset + item.size / 2
-                abs(itemCenter - viewportCenter)
-            }?.index
-        }
+    var didRestoreInitialPosition by rememberSaveable { mutableStateOf(false) }
+    val listState = rememberSaveable(saver = LazyListState.Saver) {
+        LazyListState()
     }
 
-    // Item selected
-    val selectedForecast: DailyForecastUiModel? =
-        centerItemIndex?.let { index ->
-            forecast.getOrNull(index)
-        }
+    val selectedForecast =
+        forecast.getOrNull(centerItemIndex ?: selectedIndex)
 
-    // Vertical padding to center first and last items
     val verticalPadding = remember(screenHeight, squareSize) {
         ((screenHeight - squareSize) / 2).coerceAtLeast(0.dp)
     }
 
-    // Scroll state (scrolling or not)
-    val isScrolling by snapshotFlow { listState.isScrollInProgress }
-        .collectAsState(initial = false)
-
-    val gravityLineFactor by animateFloatAsState(
-        targetValue = if (isScrolling) 0.6f else 1f,
-        label = "gravityLineAnimation"
-    )
-
-    // Magnet effect: when the scroll stops, center the nearest item
     LaunchedEffect(listState) {
-        snapshotFlow { listState.isScrollInProgress }
-            .distinctUntilChanged()
-            .filter { scrolling -> !scrolling }
-            .collect {
-                // Si venimos de un scroll programático, evitamos doble imán
-                if (isProgrammaticScroll.value) {
-                    isProgrammaticScroll.value = false
-                    return@collect
-                }
+        snapshotFlow { listState.layoutInfo }
+            .collect { layoutInfo ->
+                val visible = layoutInfo.visibleItemsInfo
+                if (visible.isEmpty()) return@collect
 
-                val index = centerItemIndex ?: return@collect
-                val layoutInfo = listState.layoutInfo
-                val itemInfo = layoutInfo.visibleItemsInfo
-                    .firstOrNull { it.index == index } ?: return@collect
+                val viewportCenter =
+                    (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
 
-                val targetOffset = (itemInfo.size / 2).minus(24)
-
-                listState.animateScrollToItem(
-                    index = index,
-                    scrollOffset = targetOffset.coerceAtLeast(0)
-                )
+                centerItemIndex = visible.minByOrNull { item ->
+                    val center = item.offset + item.size / 2
+                    abs(center - viewportCenter)
+                }?.index
             }
     }
 
-    // Base width for gravity lines
+    suspend fun snapToCenter(index: Int, offsetPx: Int) {
+        if (isSnapping.value) return
+        isSnapping.value = true
+        try {
+            listState.animateScrollToItem(index, offsetPx)
+        } finally {
+            isSnapping.value = false
+        }
+    }
+
+    LaunchedEffect(forecast, squareSize, state.lastSelectedEpochDay) {
+        if (didRestoreInitialPosition) return@LaunchedEffect
+        if (forecast.isEmpty()) return@LaunchedEffect
+
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo.isNotEmpty() }
+            .filter { it }
+            .first()
+
+        val targetIndex = state.lastSelectedEpochDay?.let { epoch ->
+            forecast.indexOfFirst { it.date.toEpochDay() == epoch }
+                .takeIf { it >= 0 }
+        } ?: 0
+
+        val targetOffsetPx = with(density) {
+            (squareSize / 2).coerceAtLeast(0.dp).roundToPx()
+        }
+
+        snapToCenter(targetIndex, targetOffsetPx)
+        didRestoreInitialPosition = true
+    }
+
+    val isScrolling by snapshotFlow { listState.isScrollInProgress }
+        .collectAsState(initial = false)
+
+    val gravityLineFactorTarget = if (isScrolling) 0.6f else 1f
+
+    val gravityLineFactor by animateFloatAsState(
+        targetValue = gravityLineFactorTarget,
+        label = "gravityLineAnimation"
+    )
+
+    val isAnimatingLinesGrow by remember {
+        derivedStateOf {
+            !isScrolling && gravityLineFactor < 0.999f
+        }
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.isScrollInProgress }
+            .distinctUntilChanged()
+            .collect { scrolling ->
+                if (scrolling) return@collect
+                if (isSnapping.value) return@collect
+
+                val index = centerItemIndex ?: return@collect
+
+                val itemInfo = listState.layoutInfo.visibleItemsInfo
+                    .firstOrNull { it.index == index }
+                    ?: return@collect
+
+                val offset = (itemInfo.size / 2).coerceAtLeast(0)
+
+                snapToCenter(index, offset)
+            }
+    }
+
+    LaunchedEffect(centerItemIndex) {
+        centerItemIndex?.let { selectedIndex = it }
+    }
+
     val baseLineWidth = remember(screenWidth, squareSize) {
         val centerX = screenWidth / 2
         val cardHalf = squareSize / 2
-        val minGapFromCard = 12.dp
+        val minGap = 12.dp
 
-        (centerX - cardHalf - minGapFromCard).coerceAtLeast(0.dp)
+        (centerX - cardHalf - minGap).coerceAtLeast(0.dp)
     }
+    val isButtonEnabled = selectedForecast != null &&
+            !isSnapping.value &&
+            !isAnimatingLinesGrow &&
+            !isScrolling
 
     Column(Modifier.fillMaxSize()) {
 
@@ -130,14 +159,14 @@ fun ForecastScrollableContent(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            // Lateral lines
+
             val lineHeight = 3.dp
-            val dynamicLineWidth = baseLineWidth * gravityLineFactor
+            val dynamicWidth = baseLineWidth * gravityLineFactor
 
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .width(dynamicLineWidth)
+                    .width(dynamicWidth)
                     .height(lineHeight)
                     .background(Color.White.copy(alpha = 0.4f))
             )
@@ -145,27 +174,28 @@ fun ForecastScrollableContent(
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .width(dynamicLineWidth)
+                    .width(dynamicWidth)
                     .height(lineHeight)
                     .background(Color.White.copy(alpha = 0.4f))
             )
 
-            // Main list
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
+                userScrollEnabled = !isSnapping.value && !isAnimatingLinesGrow,
                 contentPadding = PaddingValues(
                     top = verticalPadding,
                     bottom = verticalPadding
                 ),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
+
                 itemsIndexed(
                     items = forecast,
                     key = { _, item -> item.date.toEpochDay() }
                 ) { index, dayForecast ->
 
-                    val isSelected = index == centerItemIndex
+                    val isSelected = (centerItemIndex ?: selectedIndex) == index
 
                     val scale by animateFloatAsState(
                         targetValue = if (isSelected) 1.15f else 0.9f,
@@ -177,41 +207,30 @@ fun ForecastScrollableContent(
                         squareSize = squareSize,
                         scale = scale,
                         onCenterRequest = {
-                            // On card click, center the item with a programmatic scroll
                             scope.launch {
-                                val layoutInfo = listState.layoutInfo
-
-                                val itemInfo = layoutInfo.visibleItemsInfo
+                                val info = listState.layoutInfo.visibleItemsInfo
                                     .firstOrNull { it.index == index }
 
-                                val targetOffset = if (itemInfo != null) {
-                                    (itemInfo.size / 2).minus(24)
-                                } else {
-                                    0
-                                }
+                                val offset = info?.size?.div(2) ?: 0
 
-                                isProgrammaticScroll.value = true
-                                listState.animateScrollToItem(
-                                    index = index,
-                                    scrollOffset = targetOffset.coerceAtLeast(0)
-                                )
+                                snapToCenter(index, offset)
                             }
                         },
-                        onClick = { onDayClick(dayForecast) }
+                        onClick = {}
                     )
                 }
             }
         }
 
         Button(
-            onClick = { selectedForecast?.let(onDayClick) },
-            enabled = selectedForecast != null,
+            onClick = { selectedForecast?.let { vm.onDaySelected(it) } },
+            enabled = isButtonEnabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(100.dp)
                 .padding(16.dp)
         ) {
-            Text(text = "Ver detalles del día seleccionado")
+            Text("Ver detalles del día seleccionado")
         }
     }
 }

@@ -1,13 +1,13 @@
-package com.pph.data.dto
+package com.pph.data.model.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DailyForecastDto(
+data class CurrentWeatherDto(
     val dt: Long,
+    val temp: Double,
     val humidity: Int,
     @SerialName("wind_speed") val windSpeed: Double,
-    val temp: TempDto,
     val weather: List<WeatherDescriptionDto> = emptyList()
 )

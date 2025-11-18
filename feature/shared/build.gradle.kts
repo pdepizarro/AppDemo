@@ -42,6 +42,7 @@ dependencies {
 
     // Modules
     implementation(project(":core:domain"))
+    implementation(project(":core:uicomponents"))
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -56,6 +57,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extension)
+    implementation(libs.androidx.foundation.layout)
 
 
     testImplementation(libs.junit)
