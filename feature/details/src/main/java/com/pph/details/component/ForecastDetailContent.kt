@@ -8,18 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.pph.shared.ui.model.DailyForecastUiModel
 import com.pph.uicomponents.theme.DemoAppTheme
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import com.pph.details.R
 
 @Composable
 fun ForecastDetailContent(
     forecast: DailyForecastUiModel
 ) {
-    val dateFormatter = remember {
-        DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale.getDefault())
+    val datePattern = stringResource(id = R.string.forecast_detail_date_pattern)
+    val dateFormatter = remember(datePattern) {
+        DateTimeFormatter.ofPattern(datePattern, Locale.getDefault())
     }
 
     val windKmh = remember(forecast.windSpeed) {
@@ -50,36 +53,54 @@ fun ForecastDetailContent(
         Spacer(Modifier.height(DemoAppTheme.dimens.x300))
 
         Text(
-            text = "Temperatura máxima: ${forecast.maxTemp}º",
+            text = stringResource(
+                id = R.string.forecast_detail_max_temp,
+                forecast.maxTemp
+            ),
             style = DemoAppTheme.typography.bodyLarge
         )
 
         Text(
-            text = "Temperatura mínima: ${forecast.minTemp}º",
-            style = DemoAppTheme.typography.bodyLarge
-        )
-
-        Spacer(Modifier.height(DemoAppTheme.dimens.x200))
-
-        Text(
-            text = "Temperatura día: ${forecast.dayTemp}º",
-            style = DemoAppTheme.typography.bodyLarge
-        )
-
-        Text(
-            text = "Temperatura noche: ${forecast.nightTemp}º",
+            text = stringResource(
+                id = R.string.forecast_detail_min_temp,
+                forecast.minTemp
+            ),
             style = DemoAppTheme.typography.bodyLarge
         )
 
         Spacer(Modifier.height(DemoAppTheme.dimens.x200))
 
         Text(
-            text = "Humedad: ${forecast.humidity}%",
+            text = stringResource(
+                id = R.string.forecast_detail_day_temp,
+                forecast.dayTemp
+            ),
             style = DemoAppTheme.typography.bodyLarge
         )
 
         Text(
-            text = "Viento: $windKmh km/h",
+            text = stringResource(
+                id = R.string.forecast_detail_night_temp,
+                forecast.nightTemp
+            ),
+            style = DemoAppTheme.typography.bodyLarge
+        )
+
+        Spacer(Modifier.height(DemoAppTheme.dimens.x200))
+
+        Text(
+            text = stringResource(
+                id = R.string.forecast_detail_humidity,
+                forecast.humidity
+            ),
+            style = DemoAppTheme.typography.bodyLarge
+        )
+
+        Text(
+            text = stringResource(
+                id = R.string.forecast_detail_wind,
+                windKmh
+            ),
             style = DemoAppTheme.typography.bodyLarge
         )
 

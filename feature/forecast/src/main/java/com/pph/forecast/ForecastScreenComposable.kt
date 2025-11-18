@@ -18,7 +18,7 @@ class ForecastScreenComposable(
             vm = vm,
             state = state,
             onDayDetailNavigation = { onDayDetailNavigation() },
-            onRetryClick = { vm.refresh() }
+            onRetryClick = { vm.refresh(comesFromRetry = true) }
         )
     }
 }

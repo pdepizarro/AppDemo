@@ -6,8 +6,8 @@ import com.pph.shared.ui.model.DailyForecastUiModel
 import java.time.Instant
 import java.time.ZoneOffset
 
-fun ForecastResponseBo.toUiModel(): List<DailyForecastUiModel> =
-    daily.map { it.toUiModel() }
+fun List<DailyForecastBo>.toUiModel(): List<DailyForecastUiModel> =
+    map { it.toUiModel() }
 
 fun DailyForecastBo.toUiModel(): DailyForecastUiModel =
     DailyForecastUiModel(

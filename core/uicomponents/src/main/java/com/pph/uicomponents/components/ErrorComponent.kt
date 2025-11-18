@@ -1,4 +1,4 @@
-package com.pph.shared.ui.component
+package com.pph.uicomponents.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pph.uicomponents.theme.DemoAppTheme
+import com.pph.uicomponents.R
 
 @Composable
 fun ErrorComponent(
@@ -31,7 +34,7 @@ fun ErrorComponent(
 
             Icon(
                 imageVector = Icons.Filled.Warning,
-                contentDescription = "Error",
+                contentDescription = stringResource(id = R.string.error_component_icon_content_description),
                 tint = Color(0xFFFFC107),
                 modifier = Modifier
                     .size(DemoAppTheme.dimens.x2400)
@@ -44,14 +47,14 @@ fun ErrorComponent(
                 text = message,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = Color.White,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = onRetryClick) {
-                Text(text = "Reintentar")
+                Text(text = stringResource(id = R.string.error_component_retry))
             }
         }
     }

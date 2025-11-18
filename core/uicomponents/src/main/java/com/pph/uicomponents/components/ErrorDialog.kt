@@ -1,4 +1,4 @@
-package com.pph.shared.ui.component
+package com.pph.uicomponents.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,10 +9,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.pph.uicomponents.R
 
 @Composable
 fun ErrorDialog(
@@ -49,7 +51,7 @@ fun ErrorDialog(
                 ) {
 
                     Text(
-                        text = "Error",
+                        text = stringResource(id = R.string.error_dialog_title),
                         style = MaterialTheme.typography.headlineSmall
                     )
 
@@ -69,14 +71,14 @@ fun ErrorDialog(
                     ) {
 
                         TextButton(onClick = onDismiss) {
-                            Text("Cerrar")
+                            Text(stringResource(id = R.string.error_dialog_close))
                         }
 
                         onRetryClick?.let { retryFn ->
                             Spacer(Modifier.width(8.dp))
 
                             Button(onClick = retryFn) {
-                                Text("Reintentar")
+                                Text(stringResource(id = R.string.error_dialog_retry))
                             }
                         }
                     }

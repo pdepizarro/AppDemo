@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import com.pph.forecast.R
 import com.pph.shared.ui.model.DailyForecastUiModel
 import com.pph.uicomponents.theme.DemoAppTheme
 import java.time.format.DateTimeFormatter
@@ -36,7 +38,10 @@ fun ForecastDayItem(
     ) {
         val isSelected = scale > 1f
 
-        val dateFormatter = DateTimeFormatter.ofPattern("EEE d MMM", Locale.getDefault())
+        val dateFormatter = DateTimeFormatter.ofPattern(
+            stringResource(id = R.string.forecast_day_item_date_pattern),
+            Locale.getDefault()
+        )
 
         val backgroundColor =
             if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
@@ -74,7 +79,11 @@ fun ForecastDayItem(
                 )
 
                 Text(
-                    text = "${forecast.maxTemp}º / ${forecast.minTemp}º",
+                    text = stringResource(
+                        id = R.string.forecast_day_item_temp_max_min,
+                        forecast.maxTemp,
+                        forecast.minTemp
+                    ),
                     style = DemoAppTheme.typography.bodyLarge
                 )
             }

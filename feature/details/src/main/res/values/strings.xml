@@ -1,0 +1,17 @@
+<resources>
+
+    <!-- Generic empty state for detail screen -->
+    <string name="forecast_detail_empty">No hay información disponible</string>
+
+    <!-- Date pattern (localized) -->
+    <string name="forecast_detail_date_pattern">EEEE d \'de\' MMMM</string>
+
+    <!-- Detail screen strings -->
+    <string name="forecast_detail_max_temp">Temperatura maxima: %1$sº</string>
+    <string name="forecast_detail_min_temp">Temperatura minima: %1$sº</string>
+    <string name="forecast_detail_day_temp">Temperatura de día: %1$sº</string>
+    <string name="forecast_detail_night_temp">Temperatura de noche: %1$sº</string>
+    <string name="forecast_detail_humidity">Humedad: %1$d%%</string>
+    <string name="forecast_detail_wind">Viento: %1$d km/h</string>
+
+</resources>

@@ -7,9 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.pph.details.component.ForecastDetailContent
 import com.pph.details.state.ForecastDetailScreenState
-import com.pph.shared.ui.component.LoadingComponent
+import com.pph.uicomponents.components.LoadingComponent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import com.pph.uicomponents.theme.DemoAppTheme
 
 @Composable
@@ -27,7 +28,7 @@ fun ForecastDetailScreen(
             state.detail != null -> ForecastDetailContent(forecast = state.detail)
 
             else -> Text(
-                text = "No hay datos para mostrar",
+                text = stringResource(id = R.string.forecast_detail_empty),
                 style = DemoAppTheme.typography.bodyLarge,
                 modifier = Modifier.align(Alignment.Center)
             )

@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ForecastViewModel @Inject constructor(
     private val refreshBarajasForecastUseCase: RefreshBarajasForecastUseCase,
     private val observeBarajasForecastUseCase: ObserveBarajasForecastUseCase,
-    private val saveSelectedDayUseCase: SaveSelectedDayUseCase
+    private val saveSelectedDayUseCase: SaveSelectedDayUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -38,13 +38,13 @@ class ForecastViewModel @Inject constructor(
 
     private val _events = MutableSharedFlow<ForecastScreenEvent>()
     val events = _events.asSharedFlow()
+    private var currentErrorMsg: String? = null
 
     init {
         observeForecast()
         refresh()
     }
 
-    // Observe Room: Update viewState when DB changes
     private fun observeForecast() {
         viewModelScope.launch {
             observeBarajasForecastUseCase().collect { boList ->
@@ -58,18 +58,31 @@ class ForecastViewModel @Inject constructor(
                     .take(7)
                     .map { it.toUiModel() }
 
-                _state.value = _state.value.copy(
-                    forecast = uiList,
-                    isLoading = false
-                )
+                if (uiList.isNotEmpty()) {
+                    _state.value = _state.value.copy(
+                        forecast = uiList,
+                        isLoading = false
+                    )
+                    currentErrorMsg?.let { msg ->
+                        _events.emit(ForecastScreenEvent.ShowRefreshError(msg))
+                        currentErrorMsg = null
+                    }
+                } else {
+                    _state.value = _state.value.copy(
+                        forecast = uiList,
+                        isLoading = false,
+                        errorMessage = currentErrorMsg
+                    )
+
+                }
             }
         }
     }
 
-
-    // Refresh: Fetch data from API and update Room DB
-    fun refresh() {
+    fun refresh(comesFromRetry: Boolean = false) {
         viewModelScope.launch {
+            currentErrorMsg = null
+
             _state.value = _state.value.copy(
                 isLoading = true,
                 errorMessage = null
@@ -78,10 +91,13 @@ class ForecastViewModel @Inject constructor(
             val result = refreshBarajasForecastUseCase()
 
             result.onFailure { e ->
-                val msg = e.message ?: "No se pudo actualizar el pronóstico"
+                currentErrorMsg = e.message
 
-                _state.value = _state.value.copy(errorMessage = msg)
-                _events.emit(ForecastScreenEvent.ShowRefreshError(msg))
+                if (comesFromRetry && _state.value.forecast.isEmpty())
+                    _state.value = _state.value.copy(
+                        isLoading = false,
+                        errorMessage = null
+                    )
             }
         }
     }

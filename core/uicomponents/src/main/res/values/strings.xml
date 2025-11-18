@@ -1,4 +1,15 @@
 <resources>
-    <string name="accept">Aceptar</string>
-    <string name="error">Error</string>
+
+    <!-- Error component -->
+    <string name="error_component_icon_content_description">Error</string>
+    <string name="error_component_retry">Reintentar</string>
+
+    <!-- Error dialog -->
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_close">Cerrar</string>
+    <string name="error_dialog_retry">Reintentar</string>
+
+    <!-- Loading component -->
+    <string name="loading_component_message">Simulamos una carga...</string>
+
 </resources>

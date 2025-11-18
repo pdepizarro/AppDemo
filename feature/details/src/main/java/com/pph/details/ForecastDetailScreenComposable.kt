@@ -15,7 +15,6 @@ class ForecastDetailScreenComposable(
 
         ForecastDetailScreen(
             state = state,
-            onRetryClick = {},
         )
     }
 }

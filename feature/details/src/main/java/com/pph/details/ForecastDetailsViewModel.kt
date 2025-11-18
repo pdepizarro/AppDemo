@@ -33,7 +33,7 @@ class ForecastDetailsViewModel @Inject constructor(
 
             observeBarajasForecastUseCase().collect { boList ->
 
-                val uiList = boList.map { it.toUiModel() }
+                val uiList = boList.toUiModel()
 
                 val selected = uiList.firstOrNull {
                     it.date.toEpochDay() == selectedEpochDay

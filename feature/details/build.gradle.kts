@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pph.feature.details"
+    namespace = "com.pph.details"
     compileSdk = 36
 
     buildTypes {

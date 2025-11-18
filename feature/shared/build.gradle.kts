@@ -4,11 +4,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.pph.feature.shared"
+    namespace = "com.pph.shared"
     compileSdk = 36
 
     buildTypes {
@@ -42,23 +41,9 @@ dependencies {
 
     // Modules
     implementation(project(":core:domain"))
-    implementation(project(":core:uicomponents"))
 
     // Core
     implementation(libs.androidx.core.ktx)
-
-    // Compose
-    implementation(libs.compose.runtime)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.ui.activity)
-    implementation(libs.compose.navigation)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material.icons.extension)
-    implementation(libs.androidx.foundation.layout)
-
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
