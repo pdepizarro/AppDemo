@@ -86,13 +86,14 @@ graph TD
 ### 🔁 Diagrama de comunicación entre módulos
 
 ``` mermaid
-graph LR
-    UI["UI / Features\n(Compose + ViewModel)"] --> UseCases["core:domain\nUseCases"]
-    UseCases --> RepoInterface["core:domain\nRepository Interfaces"]
-
-    RepoInterface --> RepoImpl["core:data\nRepository Implementations"]
-    RepoImpl --> RemoteDS["Remote Data Source\n(OpenWeather API via Ktorfit)"]
-    RepoImpl --> LocalDS["Local Data Source\n(DB / Cache)"]
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
+flowchart LR
+    UI["UI / Features&#10;(Compose + ViewModel)"] --> UseCases["core:domain&#10;UseCases"]
+    UseCases --> RepoInterface["core:domain&#10;Repository Interfaces"]
+    
+    RepoInterface --> RepoImpl["core:data&#10;Repository Implementations"]
+    RepoImpl --> RemoteDS["Remote Data Source&#10;(OpenWeather API via Ktorfit)"]
+    RepoImpl --> LocalDS["Local Data Source&#10;(DB / Cache)"]
 
     LocalDS --> RepoImpl
     RepoImpl --> FlowBack["Flows / Results"]
