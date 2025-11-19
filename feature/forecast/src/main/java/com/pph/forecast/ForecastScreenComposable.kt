@@ -6,16 +6,19 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.pph.uinavigation.ScreenComposable
 
-class ForecastScreenComposable : ScreenComposable {
+class ForecastScreenComposable(
+    private val onDayDetailNavigation: () -> Unit
+) : ScreenComposable {
     @Composable
     override fun Create() {
         val vm: ForecastViewModel = hiltViewModel()
         val state by vm.state.collectAsState()
 
         ForecastScreen(
+            vm = vm,
             state = state,
-            onDayClick = {},
-            onRetryClick = { vm.loadForecastData() }
+            onDayDetailNavigation = { onDayDetailNavigation() },
+            onRetryClick = { vm.refresh(comesFromRetry = true) }
         )
     }
 }

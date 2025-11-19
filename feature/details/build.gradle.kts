@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pph.feature.details"
+    namespace = "com.pph.details"
     compileSdk = 36
 
     buildTypes {
@@ -27,6 +27,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    defaultConfig {
+        minSdk = 26
+    }
+
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -38,7 +42,9 @@ dependencies {
     // Modules
     implementation(project(":core:uicomponents"))
     implementation(project(":core:uinavigation"))
+    implementation(project(":core:domain"))
 
+    implementation(project(":feature:shared"))
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -62,6 +68,4 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

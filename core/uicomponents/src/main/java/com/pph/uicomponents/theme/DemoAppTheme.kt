@@ -2,33 +2,25 @@ package com.pph.uicomponents.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import com.pph.uicomponents.theme.tokens.DemoAppDimens
-import com.pph.uicomponents.theme.tokens.DemoAppDimensImpl
-import com.pph.uicomponents.theme.tokens.DemoAppShapesImpl
-import com.pph.uicomponents.theme.tokens.DemoAppTypography
-import com.pph.uicomponents.theme.tokens.DemoAppTypographyImpl
+import com.pph.uicomponents.theme.tokens.*
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue80, secondary = BlueGrey80, tertiary = Yellow80
+    primary = Blue80,
+    secondary = BlueGrey80,
+    tertiary = Yellow80,
+    background = BackgroundDark,
+    surface = CardDark
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Blue40, secondary = BlueGrey40, tertiary = Yellow40
-)
-
-private val LocalDemoAppDimens = staticCompositionLocalOf { DemoAppDimens() }
-private val LocalDemoAppShapes = staticCompositionLocalOf { Shapes() }
-private val LocalDemoAppTypography = staticCompositionLocalOf { DemoAppTypography() }
+// Provide defaults using the IMPLEMENTATIONS
+private val LocalDemoAppDimens = staticCompositionLocalOf { DemoAppDimensImpl }
+private val LocalDemoAppShapes = staticCompositionLocalOf { DemoAppShapesImpl }
+private val LocalDemoAppTypography = staticCompositionLocalOf { DemoAppTypographyImpl }
 
 @Composable
 fun DemoAppTheme(
@@ -39,11 +31,11 @@ fun DemoAppTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (darkTheme) dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        else -> DarkColorScheme
     }
 
     CompositionLocalProvider(
@@ -52,11 +44,11 @@ fun DemoAppTheme(
         LocalDemoAppTypography provides DemoAppTypographyImpl
     ) {
         MaterialTheme(
-            colorScheme = colorScheme, content = content
+            colorScheme = colorScheme,
+            content = content
         )
     }
 }
-
 
 object DemoAppTheme {
     val dimens: DemoAppDimens

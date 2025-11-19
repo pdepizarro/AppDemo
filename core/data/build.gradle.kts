@@ -25,6 +25,10 @@ android {
         }
     }
 
+    defaultConfig {
+        minSdk = 26
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -79,8 +83,22 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     ksp(libs.ktorfit.ksp)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     // Testing
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.navigation.testing)
+    testImplementation(libs.ktor.client.mock)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.navigation.testing)
+    androidTestImplementation(libs.ktor.client.mock)
+    kspAndroidTest(libs.hilt.compiler)
+    debugImplementation(libs.compose.ui.tooling)
 }

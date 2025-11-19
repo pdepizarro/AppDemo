@@ -1,7 +1,15 @@
 package com.pph.domain.repository
 
-import com.pph.domain.model.ForecastResponseBo
+import com.pph.domain.model.DailyForecastBo
+import kotlinx.coroutines.flow.Flow
 
 interface ForecastRepository {
-    suspend fun getBarajasForecast(): Result<ForecastResponseBo>
+    /**
+     * Reads local cached forecast from Room.
+     */
+    fun observeBarajasDailyForecast(): Flow<List<DailyForecastBo>>
+    /**
+     * Refreshes data from OpenWeather API and stores it into Room.
+     */
+    suspend fun refreshBarajasForecast(): Result<Unit>
 }

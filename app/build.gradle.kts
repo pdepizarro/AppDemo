@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -53,8 +54,8 @@ dependencies {
     implementation(project(":core:uinavigation"))
     implementation(project(":core:uicomponents"))
 
-    implementation(project(":feature:workinprogress"))
     implementation(project(":feature:forecast"))
+    implementation(project(":feature:details"))
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -78,10 +79,11 @@ dependencies {
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.navigation.testing)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.navigation.testing)
     debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.test.manifest)
 }

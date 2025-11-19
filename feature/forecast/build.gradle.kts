@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.pph.feature.forecast"
+    namespace = "com.pph.forecast"
     compileSdk = 36
 
     buildTypes {
@@ -70,6 +70,4 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

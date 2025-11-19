@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">workinprogress</string>
+
+    <!-- Forecast day item -->
+    <string name="forecast_day_item_date_pattern">EEE d MMM</string>
+    <string name="forecast_day_item_temp_max_min">%1$sº / %2$sº</string>
+
+    <!-- Forecast scrollable content -->
+    <string name="forecast_scrollable_button_details">Ver detalles del día seleccionado</string>
+
+    <!-- Forecast screen -->
+    <string name="forecast_screen_empty_message">No hay información disponible</string>
+    <string name="forecast_screen_refresh_error_default">No se pudo actualizar el pronóstico</string>
+
 </resources>

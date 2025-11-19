@@ -1,29 +1,25 @@
 package com.pph.shared.ui.mapper
 
 import com.pph.domain.model.DailyForecastBo
-import com.pph.domain.model.ForecastResponseBo
 import com.pph.shared.ui.model.DailyForecastUiModel
 import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
+import java.time.ZoneOffset
 
-fun ForecastResponseBo.toUiModel(): List<DailyForecastUiModel> =
-    daily.map { it.toUiModel() }
+fun List<DailyForecastBo>.toUiModel(): List<DailyForecastUiModel> =
+    map { it.toUiModel() }
 
-fun DailyForecastBo.toUiModel(): DailyForecastUiModel {
-    val localDate: LocalDate =
-        Instant.ofEpochSecond(dt)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-
-    val conditionMain = weather.firstOrNull()?.main ?: "Desconocido"
-
-    return DailyForecastUiModel(
-        date = localDate,
-        minTemp = temp.min.toInt(),
-        maxTemp = temp.max.toInt(),
+fun DailyForecastBo.toUiModel(): DailyForecastUiModel =
+    DailyForecastUiModel(
+        date = Instant.ofEpochSecond(dt)
+            .atOffset(ZoneOffset.UTC)
+            .toLocalDate(),
+        minTemp = temp.min,
+        maxTemp = temp.max,
+        dayTemp = temp.day,
+        nightTemp = temp.night,
         humidity = humidity,
-        windSpeed = windSpeed.toInt(),
-        condition = conditionMain
+        windSpeed = windSpeed,
+        main = weather.firstOrNull()?.main.orEmpty(),
+        description = weather.firstOrNull()?.description.orEmpty(),
+        icon = weather.firstOrNull()?.icon.orEmpty()
     )
-}

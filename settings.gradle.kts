@@ -29,6 +29,5 @@ include(":core:uicomponents")
 include(":core:uinavigation")
 
 include(":feature:shared")
-include(":feature:workinprogress")
 include(":feature:forecast")
 include(":feature:details")

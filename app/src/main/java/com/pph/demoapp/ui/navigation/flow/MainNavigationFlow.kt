@@ -1,7 +1,8 @@
 package com.pph.demoapp.ui.navigation.flow
 
 import androidx.navigation.NavHostController
-import com.pph.flow.NavigationFlow
+import com.pph.details.ForecastDetailScreenComposable
+import com.pph.uinavigation.flow.NavigationFlow
 import com.pph.forecast.ForecastScreenComposable
 import com.pph.uinavigation.ScreenComposable
 import com.pph.uinavigation.navigateWith
@@ -15,6 +16,7 @@ class MainNavigationFlow(
     }
 
     override fun screenComposables(): List<ScreenComposable> = listOf(
-        ForecastScreenComposable()
+        ForecastScreenComposable(onDayDetailNavigation = { navController.navigateWith<ForecastDetailScreenComposable>() }),
+        ForecastDetailScreenComposable()
     )
 }
