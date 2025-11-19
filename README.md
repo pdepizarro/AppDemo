@@ -87,7 +87,7 @@ graph TD
 
 ``` mermaid
 flowchart LR
-    UI[UI / Features\ (Compose + ViewModel)] --> UseCases[core:domain\ - UseCases]
+    UI[UI / Features#10 (Compose + ViewModel)] --> UseCases[core:domain\ - UseCases]
     UseCases --> RepoInterface[core:domain\ - Repository Interfaces]
 
     RepoInterface --> RepoImpl[core:data\ - Repository Implementations]
