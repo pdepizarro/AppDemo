@@ -147,8 +147,9 @@ flowchart LR
 
 ## 🔧 CI/CD: Lint con ktlint
 
-- Ejecutado automáticamente en cada commit/PR.
+- Ejecutado automáticamente en cada PR.
 - Mantiene un estilo uniforme.
+- Ejecuta tests unitarios.
 
 ------------------------------------------------------------------------
 
