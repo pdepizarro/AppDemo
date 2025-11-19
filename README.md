@@ -87,12 +87,12 @@ graph TD
 
 ``` mermaid
 flowchart LR
-    UI[UI / Features<br/> (Compose + ViewModel)] --> UseCases[core:domain<br/> - UseCases]
-    UseCases --> RepoInterface[core:domain<br/> - Repository Interfaces]
+    UI[UI / Features\ (Compose + ViewModel)] --> UseCases[core:domain\ - UseCases]
+    UseCases --> RepoInterface[core:domain\ - Repository Interfaces]
 
-    RepoInterface --> RepoImpl[core:data<br/> - Repository Implementations]
-    RepoImpl --> RemoteDS[Remote Data Source<br/> (OpenWeather API via Ktorfit)]
-    RepoImpl --> LocalDS[Local Data Source<br/> (DB / Cache)]
+    RepoInterface --> RepoImpl[core:data\ - Repository Implementations]
+    RepoImpl --> RemoteDS[Remote Data Source\ (OpenWeather API via Ktorfit)]
+    RepoImpl --> LocalDS[Local Data Source\ (DB / Cache)]
 
     LocalDS --> RepoImpl
     RepoImpl --> FlowBack[Flows / Result]
