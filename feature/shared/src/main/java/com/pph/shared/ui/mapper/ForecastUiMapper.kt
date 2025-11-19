@@ -1,7 +1,6 @@
 package com.pph.shared.ui.mapper
 
 import com.pph.domain.model.DailyForecastBo
-import com.pph.domain.model.ForecastResponseBo
 import com.pph.shared.ui.model.DailyForecastUiModel
 import java.time.Instant
 import java.time.ZoneOffset

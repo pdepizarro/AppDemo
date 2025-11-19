@@ -47,5 +47,4 @@ fun <T: ScreenComposable> CoordinatorNavHostScreen(
 
         }
     }
-
 }

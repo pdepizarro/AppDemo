@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,8 @@ fun ErrorDialog(
 
                     Text(
                         text = stringResource(id = R.string.error_dialog_title),
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.testTag("errorDialogTitle")   // 👈 tag título
                     )
 
                     Spacer(Modifier.height(12.dp))
@@ -70,14 +72,20 @@ fun ErrorDialog(
                         horizontalArrangement = Arrangement.End
                     ) {
 
-                        TextButton(onClick = onDismiss) {
+                        TextButton(
+                            onClick = onDismiss,
+                            modifier = Modifier.testTag("errorDialogCloseButton") // 👈 tag cerrar
+                        ) {
                             Text(stringResource(id = R.string.error_dialog_close))
                         }
 
                         onRetryClick?.let { retryFn ->
                             Spacer(Modifier.width(8.dp))
 
-                            Button(onClick = retryFn) {
+                            Button(
+                                onClick = retryFn,
+                                modifier = Modifier.testTag("errorDialogRetryButton") // 👈 tag retry
+                            ) {
                                 Text(stringResource(id = R.string.error_dialog_retry))
                             }
                         }

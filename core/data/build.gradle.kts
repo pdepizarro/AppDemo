@@ -90,6 +90,15 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.navigation.testing)
+    testImplementation(libs.ktor.client.mock)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.navigation.testing)
+    androidTestImplementation(libs.ktor.client.mock)
+    kspAndroidTest(libs.hilt.compiler)
+    debugImplementation(libs.compose.ui.tooling)
 }
