@@ -39,8 +39,6 @@ escalabilidad y testabilidad:
     
 
 ### 📊 Diagrama de módulos
-
-``` mermaid
 graph TD
 
     App[app] --> FeatureForecast[feature:forecast]
@@ -64,11 +62,9 @@ graph TD
     FeatureDetails --> CoreDomain
     FeatureShared --> CoreDomain
 
-    %% Correct direction
+    %% Correct direction (data depends on domain)
     CoreData[core:data] --> CoreDomain
 
-
-```
 
 ------------------------------------------------------------------------
 
