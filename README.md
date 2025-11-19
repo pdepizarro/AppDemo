@@ -86,6 +86,7 @@ graph TD
 ### 🔁 Diagrama de comunicación entre módulos
 
 ``` mermaid
+%%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart LR
     UI[UI / Features (Compose + ViewModel)] --> UseCases[core:domain - UseCases]
     UseCases --> RepoInterface[core:domain - Repository Interfaces]
