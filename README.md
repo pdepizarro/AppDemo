@@ -88,7 +88,7 @@ graph TD
 ``` mermaid
 %%{init: {'flowchart': {'htmlLabels': false}}}%%
 flowchart LR
-    UI["UI / Features&#10;(Compose + ViewModel)"] --> UseCases["core:domain&#10;UseCases"]
+    UI["UI / Features#10;(Compose + ViewModel)"] --> UseCases["core:domain&#10;UseCases"]
     UseCases --> RepoInterface["core:domain&#10;Repository Interfaces"]
     
     RepoInterface --> RepoImpl["core:data&#10;Repository Implementations"]
