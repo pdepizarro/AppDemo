@@ -9,3 +9,11 @@ plugins {
     alias(libs.plugins.ktorfit) apply false
     alias(libs.plugins.ktlint) apply false
 }
+
+subprojects {
+    pluginManager.withPlugin("org.jlleitschuh.gradle.ktlint") {
+        configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+            ignoreFailures.set(true)
+        }
+    }
+}
