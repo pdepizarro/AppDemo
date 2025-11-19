@@ -121,6 +121,22 @@ flowchart LR
 
 ------------------------------------------------------------------------
 
+## 🚀 Escalabilidad & Navegación
+
+- Navegación modular por feature.
+- Cada módulo define su propio grafo.
+- Fácil expansión hacia nuevas features.
+
+------------------------------------------------------------------------
+
+## 🌀 Corrutinas & Animación del Carrusel
+
+- Corrutinas estructuradas.
+- Cancelación segura.
+- Animación fluida y robusta.
+
+------------------------------------------------------------------------
+
 ## ❗ Gestión de Errores con `Result`
 
 - API clara y nativa de Kotlin.
@@ -133,14 +149,6 @@ flowchart LR
 
 - Ejecutado automáticamente en cada commit/PR.
 - Mantiene un estilo uniforme.
-
-------------------------------------------------------------------------
-
-## 🌀 Corrutinas & Animación del Carrusel
-
-- Corrutinas estructuradas.
-- Cancelación segura.
-- Animación fluida y robusta.
 
 ------------------------------------------------------------------------
 
@@ -165,14 +173,6 @@ flowchart LR
 - Soporte nativo para corrutinas.
 - Mock de clases finales y funciones suspend.
 - API clara y orientada a Kotlin.
-
-------------------------------------------------------------------------
-
-## 🚀 Escalabilidad & Navegación
-
-- Navegación modular por feature.
-- Cada módulo define su propio grafo.
-- Fácil expansión hacia nuevas features.
 
 
 ------------------------------------------------------------------------
