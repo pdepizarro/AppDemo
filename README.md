@@ -39,6 +39,8 @@ escalabilidad y testabilidad:
     
 
 ### 📊 Diagrama de módulos
+
+``` mermaid
 graph TD
 
     App[app] --> FeatureForecast[feature:forecast]
@@ -62,9 +64,11 @@ graph TD
     FeatureDetails --> CoreDomain
     FeatureShared --> CoreDomain
 
-    %% Correct direction (data depends on domain)
+    %% Correct direction
     CoreData[core:data] --> CoreDomain
 
+
+```
 
 ------------------------------------------------------------------------
 
@@ -83,16 +87,17 @@ graph TD
 
 ``` mermaid
 graph LR
-    UI[UI / Features<br/>(Compose + ViewModel)] --> UseCases[core:domain<br/>UseCases]
-    UseCases --> RepoInterface[core:domain<br/>Repository Interfaces]
+    UI["UI / Features\n(Compose + ViewModel)"] --> UseCases["core:domain\nUseCases"]
+    UseCases --> RepoInterface["core:domain\nRepository Interfaces"]
 
-    RepoInterface --> RepoImpl[core:data<br/>Repository Implementations]
-    RepoImpl --> RemoteDS[Remote Data Source<br/>(OpenWeather API via Ktorfit)]
-    RepoImpl --> LocalDS[Local Data Source<br/>(DB / Cache)]
+    RepoInterface --> RepoImpl["core:data\nRepository Implementations"]
+    RepoImpl --> RemoteDS["Remote Data Source\n(OpenWeather API via Ktorfit)"]
+    RepoImpl --> LocalDS["Local Data Source\n(DB / Cache)"]
 
     LocalDS --> RepoImpl
-    RepoImpl --> FlowBack[Flows / Results]
+    RepoImpl --> FlowBack["Flows / Results"]
     FlowBack --> UI
+    
 ```
 
 ------------------------------------------------------------------------
